@@ -1,8 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  items: [],
-  summ: null,
+  items: []
 };
 
 export const cartSlice = createSlice({
@@ -11,29 +10,23 @@ export const cartSlice = createSlice({
   reducers: {
     changeCart: (state, action) => {
       console.log(action.payload)
-      let item = state.items.find((item) => item.id == action.payload.id)
-      if (!item){
+      let itemsWithId = state.items.filter((item) => item.id == action.payload.id)
+      if (!itemsWithId){
         state.items.push(action.payload);
-        state.summ += action.payload.count * action.payload.price
-      } else if (item.size === action.payload.size) {
-        item.count++;
-        state.summ += action.payload.count * item.price
-      }  else if (item.size !== action.payload.size) {
-        state.items.push(action.payload);
-        state.summ += action.payload.count * action.payload.price
+      } else {
+        let itemWithIdSize = itemsWithId.find((item) => item.size == action.payload.size)
+        if (!itemWithIdSize) {
+          state.items.push(action.payload);
+        } else {
+          itemWithIdSize.count++;
+        }
       }
-      
     },
     delCart: (state, action) => {
-      console.log(action.payload)
       state.items = state.items.filter((item) => !(item.id == action.payload.id && item.size == action.payload.size))
-      state.summ -= action.payload.count * action.payload.price
-      
     },
     cleanCart: (state) => {
       state.items = []
-      state.summ = null
-      
     },
   },
   

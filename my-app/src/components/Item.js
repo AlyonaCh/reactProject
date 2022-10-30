@@ -1,5 +1,5 @@
 import {React, useEffect, useState} from 'react';
-import {useParams, useNavigate} from 'react-router-dom'
+import {useParams, useNavigate, NavLink} from 'react-router-dom'
 import { Banner } from './Banner';
 import { useSelector, useDispatch } from 'react-redux'
 import { changeCart, delCart, cleanCart } from '../features/cart/cartSlice'
@@ -8,7 +8,7 @@ import { Loading } from './Loading';
 export function Item() {
   const dispatch = useDispatch()
   const items = useSelector((state) => state.cart.items)
-  const summ = useSelector((state) => state.cart.summ)
+  const [summ, setSumm] = useState(0);
   const [user, setUser] = useState({phone: "", address: "",agreement:false});
   const [loading, setLoading] = useState(false);
 
@@ -16,6 +16,13 @@ export function Item() {
     maxWidth: '30rem',
     margin: '0 auto'
   }
+
+  useEffect(() => {
+    setSumm( () => items.reduce(function (accumulator, currentValue) {
+      return accumulator + currentValue.price * currentValue.count;
+    }, 0))
+  },[items]);
+
 
   const handlDel = (item) => {
     dispatch(delCart(item))
@@ -72,7 +79,7 @@ export function Item() {
                 {items.map((item, i) => (
                   <tr key={item.id+'_'+item.size}>
                     <td scope="row">{i}</td>
-                    <td><a href="/products/1.html">{item.title}</a></td>
+                    <td><NavLink to={`/catalog/${item.id}`}>{item.title}</NavLink></td>
                     <td>{item.size}</td>
                     <td>{item.count}</td>
                     <td>{item.price} руб.</td>
