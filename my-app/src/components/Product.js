@@ -2,7 +2,7 @@ import {React, useEffect, useState} from 'react';
 import {useParams, useNavigate} from 'react-router-dom'
 import { Banner } from './Banner';
 import { Loading } from './Loading';
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { changeCart } from '../features/cart/cartSlice'
 
 export function Product() {

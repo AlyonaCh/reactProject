@@ -1,14 +1,14 @@
 import {React, useEffect, useState} from 'react';
-import {useParams, useNavigate} from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
 import { Banner } from './Banner';
 import { useSelector, useDispatch } from 'react-redux'
-import { changeCart, delCart, cleanCart } from '../features/cart/cartSlice'
+import { delCart, cleanCart, selectCart, selectSum } from '../features/cart/cartSlice'
 import { Loading } from './Loading';
 
 export function Item() {
   const dispatch = useDispatch()
-  const items = useSelector((state) => state.cart.items)
-  const summ = useSelector((state) => state.cart.summ)
+  const items = useSelector(selectCart)
+  const itemsSum = useSelector(selectSum)
   const [user, setUser] = useState({phone: "", address: "",agreement:false});
   const [loading, setLoading] = useState(false);
 
@@ -72,7 +72,7 @@ export function Item() {
                 {items.map((item, i) => (
                   <tr key={item.id+'_'+item.size}>
                     <td scope="row">{i}</td>
-                    <td><a href="/products/1.html">{item.title}</a></td>
+                    <td><NavLink to={`/catalog/${item.id}`}>{item.title}</NavLink></td>
                     <td>{item.size}</td>
                     <td>{item.count}</td>
                     <td>{item.price} руб.</td>
@@ -83,7 +83,7 @@ export function Item() {
                 
                 <tr>
                   <td colSpan="5" className="text-right">Общая стоимость</td>
-                  <td>{summ} руб.</td>
+                  <td>{itemsSum} руб.</td>
                 </tr>
               </tbody>
             </table>

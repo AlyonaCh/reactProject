@@ -1,4 +1,4 @@
-import { React, useState, useEffect} from 'react';
+import { React, useState } from 'react';
 import { Cart } from './Cart';
 import { Logo } from './Logo';
 import { Menu } from './Menu';
@@ -34,9 +34,7 @@ export function Header() {
                                 <Search show={show} setShow={clouseShow}/>
                                 <div className="header-controls-pics">
                                     <div data-id="search-expander" className="header-controls-pic header-controls-search" onClick={clickShow}>
-
                                     </div>
-                                    {/* <!-- Do programmatic navigation on click to /cart.html --> */}
                                     <Cart/>
                                 </div>
                                 
