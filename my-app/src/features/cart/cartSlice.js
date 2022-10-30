@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, createSelector } from '@reduxjs/toolkit';
 
 const initialState = {
   items: []
@@ -35,7 +35,13 @@ export const cartSlice = createSlice({
 export const { changeCart, delCart, cleanCart } = cartSlice.actions;
 
 
-export const selectCart = (state) => state.cart;
+export const selectCart = (state) => state.cart.items;
+
+export const selectSum = (state) => {
+    return state.cart.items.reduce(function (accumulator, currentValue) {
+      return accumulator + currentValue.price * currentValue.count;
+    }, 0)
+  }
 
 
 export default cartSlice.reducer;

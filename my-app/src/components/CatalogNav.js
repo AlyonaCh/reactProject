@@ -1,11 +1,10 @@
 import {React, useState, useEffect} from 'react';
 import {NavLink} from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { changeCategory } from '../features/categories/categorySlice'
+import { loadCategories } from '../api/categories'
 
 export function CatalogNav() {
-
-  const category = useSelector((state) => state.category.title)
   const dispatch = useDispatch()
   const [items, setItems] = useState([]);
 
@@ -14,7 +13,7 @@ export function CatalogNav() {
   },[items.length]);
 
   const loadItems = () => {
-    fetch('http://localhost:7070/api/categories')
+    loadCategories()
         .then(response => response.json())
         .then(data => setItems(() => data))
   }

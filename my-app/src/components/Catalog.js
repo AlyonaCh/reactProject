@@ -3,9 +3,8 @@ import { Card } from './Card';
 import { CatalogNav } from './CatalogNav';
 import { CatalogSearch } from './CatalogSearch';
 import { Loading } from './Loading';
-import { useSelector, useDispatch } from 'react-redux'
-import { changeCategory } from '../features/categories/categorySlice'
-import { changeSearch } from '../features/search/searchSlice'
+import { useSelector } from 'react-redux'
+import { loadProducts } from '../api/items'
 
 export function Catalog(props) {
   const { type } = props
@@ -23,18 +22,22 @@ export function Catalog(props) {
 
   const loadItems = () => {
     setLoading( () => true )
-    let categoryStr = category === null ? '' : `?categoryId=${category}`
-    let searchStr = !search ? '' : category === null ? `?q=${search}` : `&q=${search}`
-    const url = `http://localhost:7070/api/items${categoryStr}${searchStr}`
     
-    fetch(url)
-    .then(response => response.json())
-    .then(data => setItems(() => data))
-    .catch((e)=>console.log(e))
-    .finally(()=>setLoading( () => false ))
-    
+    loadProducts(category, offset, search)
+      .then(response => response.json())
+      .then(data => {
+        setItems(() => data)
+        if (data.length < 6) setDisabled(() => true )
+      })
+      .catch((e)=>console.log(e))
+      .finally(()=>setLoading( () => false ))
     
   }
+
+  useEffect(() => {
+    setOffset(() => 0)
+    setDisabled(() => false )
+  },[category]);
 
   useEffect(() => {
     if (offset >= 6) loadOffset()
@@ -42,29 +45,15 @@ export function Catalog(props) {
 
   const loadOffset = () => {
     setLoading( () => true )
-    if (category === null) {
-      fetch(`http://localhost:7070/api/items?offset=${offset}&q=${search}`)
-      .then(response => response.json())
-      .then(data => {
-        setItems((prev) => [...prev, ...data])
-        if (data.length < 6) setDisabled(() => true )
-      })
-      .catch((e)=>console.log(e))
-      .finally(()=>setLoading( () => false ))
-    } else {
-      fetch(`http://localhost:7070/api/items?categoryId=${category}&offset=${offset}&q=${search}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      })
-      .then(response => response.json())
-      .then(data => {
-        setItems((prev) => [...prev, ...data])
-        if (data.length < 6) setDisabled(() => true )
-      })
-      .catch((e)=>console.log(e))
-      .finally(()=>setLoading( () => false ))
-    }
-    
+    loadProducts(category, offset, search)
+    .then(response => response.json())
+    .then(data => {
+      setItems((prev) => [...prev, ...data])
+      if (data.length < 6) setDisabled(() => true )
+    })
+    .catch((e)=>console.log(e))
+    .finally(()=>setLoading( () => false ))
+     
   }
 
   return (

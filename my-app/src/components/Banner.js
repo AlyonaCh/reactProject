@@ -1,9 +1,4 @@
 import React from 'react';
-import { Info } from './Info';
-import { Pay } from './Pay';
-import { Copyright } from './Copyright';
-import { Contacts } from './Contacts';
-import { Section } from './Section';
 import banner from '../img/banner.jpg';
 
 export function Banner() {
